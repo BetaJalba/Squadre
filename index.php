@@ -60,7 +60,6 @@ session_start();
                 </form>
 
                 <?php
-                // Set session variables
                 foreach($_GET as $k => $v){
                     if (!isset($_SESSION[$k]) || !is_array($_SESSION[$k])) {
                         $_SESSION[$k] = [];
@@ -73,6 +72,43 @@ session_start();
                     print_r($v);
                     echo '<br>';
                 }
+
+                echo '<br>';
+
+                //Ordina squadre in modo decrescente
+                $win_sorted = $_SESSION['num_win'];
+                $name_sorted = $_SESSION['nome'];
+                array_multisort($win_sorted, SORT_DESC, SORT_REGULAR, $name_sorted);
+                
+                print_r($name_sorted);
+                echo '<br>';
+                print_r($win_sorted);
+                echo '<br>';
+
+                echo '<br>';
+
+                //Controlla se tutte le squadre hanno avuto le stesse partite
+                if (!isset($_SESSION['nome']))
+                    return;
+
+                $count = $_SESSION['num_win'][0] + $_SESSION['num_draw'][0] + $_SESSION['num_lose'][0];
+                for($i = 0; $i < count($_SESSION['nome']); $i++){
+                    if ($_SESSION['num_win'][$i] + $_SESSION['num_draw'][$i] + $_SESSION['num_lose'][$i] != $count){
+                        echo 'Non tutte le squadre hanno giocato lo stesso numero di partite.<br>';
+                        break;
+                    }
+                };
+
+                echo '<br>';
+
+                //Stampa squadre nuove
+                echo 'Squadre nuove:<br>';
+                for($i = 0; $i < count($_SESSION['nome']); $i++){
+                    if ($_SESSION['nuovo'][$i] == 'on')
+                        echo htmlspecialchars($_SESSION['nome'][$i]) . ' è una nuova squadra in categoria ' . htmlspecialchars($_SESSION['categoria'][$i]) . '<br>';
+                };
+
+                echo '<br>';
                 ?>
             </article>
         </main>
